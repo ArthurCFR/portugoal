@@ -1,0 +1,421 @@
+{
+  "colocataires": {
+    "Antoine": {"points": 0},
+    "Arthur": {"points": 0},
+    "Raphael": {"points": 0},
+    "Martin": {"points": 0},
+    "Perrinne": {"points": 0}
+  },
+  "taches": {
+    "Faire la vaisselle": {
+      "points_base": 2,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le plan de travail": {
+      "points_base": 1,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer les plaques de cuisson": {
+      "points_base": 2,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le four": {
+      "points_base": 3,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 3,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le micro-ondes": {
+      "points_base": 2,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le frigo (intérieur)": {
+      "points_base": 3,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 3,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer l'évier": {
+      "points_base": 1,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Vider le lave-vaisselle": {
+      "points_base": 1,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Sortir les poubelles": {
+      "points_base": 1,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer la hotte": {
+      "points_base": 2,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Ranger les courses": {
+      "points_base": 1,
+      "lieu": "Cuisine",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Passer l'aspirateur salon": {
+      "points_base": 2,
+      "lieu": "Salon",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Épousseter les meubles salon": {
+      "points_base": 1,
+      "lieu": "Salon",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer la table basse": {
+      "points_base": 1,
+      "lieu": "Salon",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Ranger le salon": {
+      "points_base": 1,
+      "lieu": "Salon",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer les vitres salon": {
+      "points_base": 2,
+      "lieu": "Salon",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer les toilettes 1er": {
+      "points_base": 2,
+      "lieu": "SDB 1er",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer la douche 1er": {
+      "points_base": 3,
+      "lieu": "SDB 1er",
+      "derniere_realisation": null,
+      "points_actuels": 3,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le lavabo 1er": {
+      "points_base": 1,
+      "lieu": "SDB 1er",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le miroir 1er": {
+      "points_base": 1,
+      "lieu": "SDB 1er",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Passer la serpillière SDB 1er": {
+      "points_base": 2,
+      "lieu": "SDB 1er",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer les toilettes 2ème": {
+      "points_base": 2,
+      "lieu": "SDB 2ème",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer la douche 2ème": {
+      "points_base": 3,
+      "lieu": "SDB 2ème",
+      "derniere_realisation": null,
+      "points_actuels": 3,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le lavabo 2ème": {
+      "points_base": 1,
+      "lieu": "SDB 2ème",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer le miroir 2ème": {
+      "points_base": 1,
+      "lieu": "SDB 2ème",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Passer la serpillière SDB 2ème": {
+      "points_base": 2,
+      "lieu": "SDB 2ème",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Passer l'aspirateur escaliers": {
+      "points_base": 2,
+      "lieu": "RDC",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Épousseter hall d'entrée": {
+      "points_base": 1,
+      "lieu": "RDC",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer les vitres RDC": {
+      "points_base": 2,
+      "lieu": "RDC",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Passer la serpillière RDC": {
+      "points_base": 2,
+      "lieu": "RDC",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Ranger le garage": {
+      "points_base": 2,
+      "lieu": "Garage",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Balayer le garage": {
+      "points_base": 1,
+      "lieu": "Garage",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Sortir les vélos": {
+      "points_base": 1,
+      "lieu": "Garage",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Organiser les outils": {
+      "points_base": 1,
+      "lieu": "Garage",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Tondre la pelouse": {
+      "points_base": 3,
+      "lieu": "Jardin",
+      "derniere_realisation": null,
+      "points_actuels": 3,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Arroser les plantes": {
+      "points_base": 1,
+      "lieu": "Jardin",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Désherber": {
+      "points_base": 2,
+      "lieu": "Jardin",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Tailler les haies": {
+      "points_base": 3,
+      "lieu": "Jardin",
+      "derniere_realisation": null,
+      "points_actuels": 3,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Ramasser les feuilles": {
+      "points_base": 2,
+      "lieu": "Jardin",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer la terrasse": {
+      "points_base": 2,
+      "lieu": "Jardin",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Balayer la cour": {
+      "points_base": 1,
+      "lieu": "Cour",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer les marches": {
+      "points_base": 1,
+      "lieu": "Cour",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Arroser les plantes cour": {
+      "points_base": 1,
+      "lieu": "Cour",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Changer les draps communs": {
+      "points_base": 2,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Faire une lessive commune": {
+      "points_base": 2,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Repasser le linge commun": {
+      "points_base": 2,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Acheter produits ménagers": {
+      "points_base": 1,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Remplacer ampoules grillées": {
+      "points_base": 1,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer radiateurs": {
+      "points_base": 2,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 2,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Dépoussiérer plinthes": {
+      "points_base": 1,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    },
+    "Nettoyer interrupteurs": {
+      "points_base": 1,
+      "lieu": "Général",
+      "derniere_realisation": null,
+      "points_actuels": 1,
+      "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+      "derniere_realisation_par": null
+    }
+  },
+  "created_at": "2025-01-10T12:00:00",
+  "last_updated": "2025-01-10T12:00:00"
+}

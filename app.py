@@ -81,14 +81,34 @@ def complete_task(data, user, task_name):
         points_gagnes = data['taches'][task_name]['points_actuels']
         data['colocataires'][user]['points'] += points_gagnes
         
-        # Mettre à jour la date de dernière réalisation
+        # Mettre à jour la date de dernière réalisation et qui l'a réalisée
         data['taches'][task_name]['derniere_realisation'] = datetime.now().isoformat()
+        data['taches'][task_name]['derniere_realisation_par'] = user
         
         # Réinitialiser les points actuels aux points de base
         data['taches'][task_name]['points_actuels'] = data['taches'][task_name]['points_base']
         
         return points_gagnes
     return 0
+
+def get_lieu_color(lieu):
+    """Retourne la couleur associée à chaque lieu"""
+    colors = {
+        "Cuisine": "🟡",  # Jaune
+        "Salon": "🟢",    # Vert
+        "SDB 1er": "🔵",  # Bleu
+        "SDB 2ème": "🟣", # Violet
+        "RDC": "🟤",      # Marron
+        "Garage": "⚫",   # Noir
+        "Jardin": "🟢",   # Vert
+        "Cour": "🟠",     # Orange
+        "Général": "⚪"   # Blanc
+    }
+    return colors.get(lieu, "⚪")
+
+def is_task_available_for_user(task_info, user):
+    """Vérifie si une tâche est disponible pour un utilisateur"""
+    return user in task_info.get('attribuee_a', [])
 
 def get_default_data():
     """Retourne les données par défaut de l'application"""
@@ -106,13 +126,17 @@ def get_default_data():
                 "points_base": 2, 
                 "lieu": "Cuisine",
                 "derniere_realisation": None,
-                "points_actuels": 2
+                "points_actuels": 2,
+                "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+                "derniere_realisation_par": None
             },
             "Nettoyer le plan de travail": {
                 "points_base": 1, 
                 "lieu": "Cuisine",
                 "derniere_realisation": None,
-                "points_actuels": 1
+                "points_actuels": 1,
+                "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+                "derniere_realisation_par": None
             },
             "Nettoyer les plaques de cuisson": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2},
             "Nettoyer le four": {"points_base": 3, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 3},
@@ -230,69 +254,106 @@ def page_dashboard():
             taches_par_lieu[lieu] = []
         taches_par_lieu[lieu].append((tache, info))
     
-    # Afficher les tâches par lieu
+    # Afficher les tâches par lieu avec couleurs
     for lieu, taches in taches_par_lieu.items():
-        st.subheader(f"📍 {lieu}")
+        color_emoji = get_lieu_color(lieu)
+        st.subheader(f"{color_emoji} {lieu}")
         cols = st.columns(2)
         
         for i, (tache, info) in enumerate(taches):
             col = cols[i % 2]
             with col:
-                col_task, col_points, col_btn = st.columns([3, 1, 1])
+                # Vérifier si la tâche est disponible pour l'utilisateur
+                is_available = is_task_available_for_user(info, user)
                 
-                with col_task:
-                    # Afficher le nom de la tâche
-                    st.write(tache)
+                # Créer un container avec style conditionnel
+                if is_available:
+                    container = st.container()
+                else:
+                    # Tâche grisée pour utilisateur non autorisé
+                    container = st.container()
+                    with container:
+                        st.markdown(f"<div style='opacity: 0.4; background-color: #f0f0f0; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
+                
+                with container:
+                    col_task, col_points, col_btn = st.columns([3, 1, 1])
                     
-                    # Afficher des informations sur la dernière réalisation si applicable
-                    if info.get('derniere_realisation'):
-                        try:
-                            derniere_date = datetime.fromisoformat(info['derniere_realisation'])
-                            jours_ecoules = (datetime.now() - derniere_date).days
-                            if jours_ecoules > 0:
-                                st.caption(f"🕒 Dernière fois: il y a {jours_ecoules} jour(s)")
-                        except:
-                            pass
-                
-                with col_points:
-                    points_actuels = info['points_actuels']
-                    points_base = info['points_base']
-                    
-                    if points_actuels > points_base:
-                        # Tâche avec bonus
-                        st.write(f"**{points_actuels} pts** ⚡")
-                        st.caption(f"(base: {points_base})")
-                    else:
-                        st.write(f"**{points_actuels} pts**")
-                
-                with col_btn:
-                    if st.button("✓", key=f"task_{tache}"):
-                        if st.session_state.get(f"confirm_{tache}"):
-                            # Confirmer la tâche
-                            points_gagnes = complete_task(data, user, tache)
-                            save_data(data)
-                            st.success(f"+{points_gagnes} points!")
-                            del st.session_state[f"confirm_{tache}"]
-                            st.rerun()
+                    with col_task:
+                        # Afficher le nom de la tâche
+                        if is_available:
+                            st.write(f"**{tache}**")
                         else:
-                            st.session_state[f"confirm_{tache}"] = True
-                            st.rerun()
+                            st.write(f"~~{tache}~~ 🔒")
+                        
+                        # Afficher des informations sur la dernière réalisation
+                        if info.get('derniere_realisation') and info.get('derniere_realisation_par'):
+                            try:
+                                derniere_date = datetime.fromisoformat(info['derniere_realisation'])
+                                jours_ecoules = (datetime.now() - derniere_date).days
+                                qui = info['derniere_realisation_par']
+                                if jours_ecoules == 0:
+                                    st.caption(f"👤 {qui} - Aujourd'hui")
+                                elif jours_ecoules == 1:
+                                    st.caption(f"👤 {qui} - Hier")
+                                else:
+                                    st.caption(f"👤 {qui} - Il y a {jours_ecoules} jours")
+                            except:
+                                pass
+                        elif info.get('derniere_realisation'):
+                            # Ancienne structure sans "qui"
+                            try:
+                                derniere_date = datetime.fromisoformat(info['derniere_realisation'])
+                                jours_ecoules = (datetime.now() - derniere_date).days
+                                if jours_ecoules > 0:
+                                    st.caption(f"🕒 Il y a {jours_ecoules} jour(s)")
+                            except:
+                                pass
+                    
+                    with col_points:
+                        points_actuels = info['points_actuels']
+                        points_base = info.get('points_base', info.get('points', 1))
+                        
+                        if points_actuels > points_base:
+                            # Tâche avec bonus
+                            st.write(f"**{points_actuels} pts** ⚡")
+                            st.caption(f"(base: {points_base})")
+                        else:
+                            st.write(f"**{points_actuels} pts**")
+                    
+                    with col_btn:
+                        if is_available:
+                            if st.button("✓", key=f"task_{tache}"):
+                                if st.session_state.get(f"confirm_{tache}"):
+                                    # Confirmer la tâche
+                                    points_gagnes = complete_task(data, user, tache)
+                                    save_data(data)
+                                    st.success(f"+{points_gagnes} points!")
+                                    del st.session_state[f"confirm_{tache}"]
+                                    st.rerun()
+                                else:
+                                    st.session_state[f"confirm_{tache}"] = True
+                                    st.rerun()
+                        else:
+                            st.write("🚫")
+                    
+                    # Afficher la confirmation si nécessaire
+                    if is_available and st.session_state.get(f"confirm_{tache}"):
+                        st.write("**C'est fait ?**")
+                        col_oui, col_non = st.columns(2)
+                        with col_oui:
+                            if st.button("Oui", key=f"oui_{tache}"):
+                                points_gagnes = complete_task(data, user, tache)
+                                save_data(data)
+                                st.success(f"+{points_gagnes} points!")
+                                del st.session_state[f"confirm_{tache}"]
+                                st.rerun()
+                        with col_non:
+                            if st.button("Non", key=f"non_{tache}"):
+                                del st.session_state[f"confirm_{tache}"]
+                                st.rerun()
                 
-                # Afficher la confirmation si nécessaire
-                if st.session_state.get(f"confirm_{tache}"):
-                    st.write("**C'est fait ?**")
-                    col_oui, col_non = st.columns(2)
-                    with col_oui:
-                        if st.button("Oui", key=f"oui_{tache}"):
-                            points_gagnes = complete_task(data, user, tache)
-                            save_data(data)
-                            st.success(f"+{points_gagnes} points!")
-                            del st.session_state[f"confirm_{tache}"]
-                            st.rerun()
-                    with col_non:
-                        if st.button("Non", key=f"non_{tache}"):
-                            del st.session_state[f"confirm_{tache}"]
-                            st.rerun()
+                if not is_available:
+                    st.markdown("</div>", unsafe_allow_html=True)
         
         st.markdown("---")
 
@@ -351,7 +412,9 @@ def page_parametres():
                 "points_base": new_points,
                 "lieu": new_lieu,
                 "derniere_realisation": None,
-                "points_actuels": new_points
+                "points_actuels": new_points,
+                "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
+                "derniere_realisation_par": None
             }
             save_data(data)
             st.success("Tâche ajoutée!")
@@ -361,33 +424,111 @@ def page_parametres():
         
         # Modifier/supprimer tâches existantes
         st.write("**Modifier/Supprimer des tâches:**")
+        
+        # Interface de modification
+        if 'editing_task' not in st.session_state:
+            st.session_state.editing_task = None
+        
         for tache, info in data['taches'].items():
-            col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
-            with col1:
-                st.write(tache)
-                # Afficher la date de dernière réalisation si elle existe
-                if info.get('derniere_realisation'):
-                    try:
-                        date = datetime.fromisoformat(info['derniere_realisation'])
-                        st.caption(f"Dernière: {date.strftime('%d/%m/%Y')}")
-                    except:
-                        pass
-            with col2:
-                points_base = info.get('points_base', info.get('points', 1))
-                points_actuels = info.get('points_actuels', points_base)
+            # Affichage normal ou mode édition
+            if st.session_state.editing_task == tache:
+                # Mode édition
+                st.write(f"**Édition: {tache}**")
                 
-                if points_actuels > points_base:
-                    st.write(f"{points_actuels} pts ⚡")
-                    st.caption(f"(base: {points_base})")
-                else:
-                    st.write(f"{points_base} pts")
-            with col3:
-                st.write(info['lieu'])
-            with col4:
-                if st.button("🗑️", key=f"del_{tache}"):
-                    del data['taches'][tache]
-                    save_data(data)
-                    st.rerun()
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    new_points_base = st.number_input("Points de base", 
+                                                     min_value=1, max_value=3, 
+                                                     value=info.get('points_base', info.get('points', 1)),
+                                                     key=f"edit_points_{tache}")
+                with col2:
+                    new_lieu = st.selectbox("Lieu", 
+                                          ["Cuisine", "Salon", "SDB 1er", "SDB 2ème", "RDC", "Garage", "Jardin", "Cour", "Général"],
+                                          index=["Cuisine", "Salon", "SDB 1er", "SDB 2ème", "RDC", "Garage", "Jardin", "Cour", "Général"].index(info['lieu']) if info['lieu'] in ["Cuisine", "Salon", "SDB 1er", "SDB 2ème", "RDC", "Garage", "Jardin", "Cour", "Général"] else 0,
+                                          key=f"edit_lieu_{tache}")
+                with col3:
+                    st.write("**Attribuée à:**")
+                    colocataires_actuels = info.get('attribuee_a', [])
+                    new_attribution = {}
+                    for coloc in ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"]:
+                        new_attribution[coloc] = st.checkbox(coloc, 
+                                                            value=coloc in colocataires_actuels,
+                                                            key=f"edit_attr_{tache}_{coloc}")
+                
+                # Boutons d'action
+                col_save, col_cancel = st.columns(2)
+                with col_save:
+                    if st.button("💾 Sauvegarder", key=f"save_{tache}"):
+                        # Mettre à jour la tâche
+                        data['taches'][tache]['points_base'] = new_points_base
+                        data['taches'][tache]['lieu'] = new_lieu
+                        data['taches'][tache]['attribuee_a'] = [coloc for coloc, selected in new_attribution.items() if selected]
+                        
+                        # Recalculer les points actuels
+                        data['taches'][tache]['points_actuels'] = calculate_task_points(data['taches'][tache])
+                        
+                        save_data(data)
+                        st.session_state.editing_task = None
+                        st.success("Tâche modifiée!")
+                        st.rerun()
+                
+                with col_cancel:
+                    if st.button("❌ Annuler", key=f"cancel_{tache}"):
+                        st.session_state.editing_task = None
+                        st.rerun()
+                        
+                st.markdown("---")
+            
+            else:
+                # Affichage normal
+                col1, col2, col3, col4, col5 = st.columns([2, 1, 1, 1, 1])
+                with col1:
+                    color_emoji = get_lieu_color(info['lieu'])
+                    st.write(f"{color_emoji} **{tache}**")
+                    
+                    # Afficher qui peut faire cette tâche
+                    attribuee_a = info.get('attribuee_a', [])
+                    if len(attribuee_a) < 5:
+                        st.caption(f"👥 {', '.join(attribuee_a)}")
+                    
+                    # Afficher la date de dernière réalisation si elle existe
+                    if info.get('derniere_realisation') and info.get('derniere_realisation_par'):
+                        try:
+                            date = datetime.fromisoformat(info['derniere_realisation'])
+                            qui = info['derniere_realisation_par']
+                            st.caption(f"👤 {qui} - {date.strftime('%d/%m/%Y')}")
+                        except:
+                            pass
+                    elif info.get('derniere_realisation'):
+                        try:
+                            date = datetime.fromisoformat(info['derniere_realisation'])
+                            st.caption(f"Dernière: {date.strftime('%d/%m/%Y')}")
+                        except:
+                            pass
+                
+                with col2:
+                    points_base = info.get('points_base', info.get('points', 1))
+                    points_actuels = info.get('points_actuels', points_base)
+                    
+                    if points_actuels > points_base:
+                        st.write(f"**{points_actuels} pts** ⚡")
+                        st.caption(f"(base: {points_base})")
+                    else:
+                        st.write(f"**{points_base} pts**")
+                
+                with col3:
+                    st.write(info['lieu'])
+                
+                with col4:
+                    if st.button("✏️", key=f"edit_{tache}", help="Modifier"):
+                        st.session_state.editing_task = tache
+                        st.rerun()
+                
+                with col5:
+                    if st.button("🗑️", key=f"del_{tache}", help="Supprimer"):
+                        del data['taches'][tache]
+                        save_data(data)
+                        st.rerun()
     
     with tab2:
         st.subheader("Gestion des Colocataires")
