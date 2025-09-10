@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from gist_manager import GistManager
 
 st.set_page_config(
@@ -20,6 +20,8 @@ def load_data():
     if gist_manager.is_configured():
         data = gist_manager.load_data_from_gist()
         if data is not None:
+            # Migrer les données si nécessaire
+            data = migrate_task_data(data)
             return data
         else:
             st.warning("⚠️ Impossible de charger depuis GitHub Gist, utilisation des données locales")
@@ -27,7 +29,10 @@ def load_data():
     # Fallback vers le fichier local
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+            data = json.load(f)
+            # Migrer les données si nécessaire
+            data = migrate_task_data(data)
+            return data
     else:
         return get_default_data()
 
@@ -71,7 +76,7 @@ def calculate_task_points(task_info):
 
 def update_task_points(data):
     """Met à jour les points actuels de toutes les tâches"""
-    for tache_nom, tache_info in data['taches'].items():
+    for tache_info in data['taches'].values():
         tache_info['points_actuels'] = calculate_task_points(tache_info)
     return data
 
@@ -106,6 +111,32 @@ def get_lieu_color(lieu):
     }
     return colors.get(lieu, "⚪")
 
+def migrate_task_data(data):
+    """Migre les données des tâches vers la nouvelle structure si nécessaire"""
+    migrations_count = 0
+    for tache_nom, tache_info in data['taches'].items():
+        # Vérifier si la tâche a la nouvelle structure
+        if 'attribuee_a' not in tache_info:
+            # Migrer vers la nouvelle structure
+            tache_info['attribuee_a'] = ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"]
+            tache_info['derniere_realisation_par'] = None
+            migrations_count += 1
+        
+        # Migrer points vers points_base si nécessaire
+        if 'points_base' not in tache_info and 'points' in tache_info:
+            tache_info['points_base'] = tache_info['points']
+            del tache_info['points']
+        
+        # S'assurer que points_actuels existe
+        if 'points_actuels' not in tache_info:
+            tache_info['points_actuels'] = tache_info.get('points_base', 1)
+    
+    # Afficher un message si des migrations ont eu lieu
+    if migrations_count > 0:
+        st.info(f"🔄 Migration automatique de {migrations_count} tâches vers la nouvelle structure")
+    
+    return data
+
 def is_task_available_for_user(task_info, user):
     """Vérifie si une tâche est disponible pour un utilisateur"""
     return user in task_info.get('attribuee_a', [])
@@ -138,15 +169,15 @@ def get_default_data():
                 "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"],
                 "derniere_realisation_par": None
             },
-            "Nettoyer les plaques de cuisson": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2},
-            "Nettoyer le four": {"points_base": 3, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 3},
-            "Nettoyer le micro-ondes": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2},
-            "Nettoyer le frigo (intérieur)": {"points_base": 3, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 3},
-            "Nettoyer l'évier": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1},
-            "Vider le lave-vaisselle": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1},
-            "Sortir les poubelles": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1},
-            "Nettoyer la hotte": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2},
-            "Ranger les courses": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1},
+            "Nettoyer les plaques de cuisson": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Nettoyer le four": {"points_base": 3, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 3, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Nettoyer le micro-ondes": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Nettoyer le frigo (intérieur)": {"points_base": 3, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 3, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Nettoyer l'évier": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Vider le lave-vaisselle": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Sortir les poubelles": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Nettoyer la hotte": {"points_base": 2, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 2, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
+            "Ranger les courses": {"points_base": 1, "lieu": "Cuisine", "derniere_realisation": None, "points_actuels": 1, "attribuee_a": ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"], "derniere_realisation_par": None},
             
             # Salon
             "Passer l'aspirateur salon": {"points_base": 2, "lieu": "Salon", "derniere_realisation": None, "points_actuels": 2},
@@ -597,6 +628,14 @@ def page_parametres():
             data = get_default_data()
             save_data(data)
             st.success("Application réinitialisée!")
+            st.rerun()
+        
+        st.markdown("---")
+        
+        if st.button("🔧 Forcer la migration des données"):
+            data = migrate_task_data(data)
+            save_data(data)
+            st.success("Migration forcée terminée!")
             st.rerun()
 
 def main():
