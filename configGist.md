@@ -110,15 +110,28 @@ __pycache__/
 4. Sélectionnez votre repository : `ArthurCFR/portugoal`
 5. Fichier principal : `app.py`
 6. Branche : `main`
+7. Cliquez sur **Deploy** (vous pourrez ajouter les secrets après)
 
 ### 4.2 Configurer les secrets sur Streamlit Cloud
-1. Dans la page de déploiement, cliquez sur **Advanced settings**
-2. Dans la section **Secrets**, collez :
+
+**Option A : Via le menu de l'app déployée**
+1. Une fois l'app déployée, allez sur votre dashboard Streamlit Cloud
+2. Trouvez votre app et cliquez sur **⚙️** (paramètres) ou les 3 points **⋯**
+3. Dans le menu déroulant, cliquez sur **Secrets**
+4. Un éditeur s'ouvre, collez exactement vos secrets :
    ```toml
    GITHUB_TOKEN = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
    GIST_ID = "a1b2c3d4e5f6g7h8i9j0"
    ```
-3. Cliquez sur **Deploy**
+5. Cliquez sur **Save**
+6. L'application redémarrera automatiquement avec les nouveaux secrets
+
+**Option B : Via les paramètres de l'app**
+1. Sur votre dashboard, cliquez sur le nom de votre app
+2. Cliquez sur **Settings** dans la barre latérale
+3. Scrollez jusqu'à la section **Secrets**
+4. Cliquez sur **Edit secrets**
+5. Ajoutez vos secrets au format TOML et sauvegardez
 
 ## Étape 5 : Vérification du fonctionnement
 
@@ -173,9 +186,10 @@ Si votre token expire ou est compromis :
 - Y a-t-il des problèmes de réseau ?
 
 ### Problème : Secrets non reconnus sur Streamlit Cloud
-- Vérifiez le format dans la section Advanced settings
-- Redéployez l'application après modification des secrets
-- Les secrets doivent être au format TOML exact
+- Vérifiez le format dans la section **Secrets** de votre app
+- Assurez-vous que les secrets sont au format TOML exact (avec guillemets)
+- L'application redémarre automatiquement après sauvegarde des secrets
+- Si problème persiste, vérifiez dans les logs de l'app sur Streamlit Cloud
 
 ---
 
