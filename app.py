@@ -235,9 +235,30 @@ def page_dashboard():
     st.title(f"🎮 Dashboard - {user}")
     st.markdown(f"**Points actuels: {data['colocataires'][user]['points']}**")
     
-    col1, col2 = st.columns([3, 1])
-    with col2:
-        if st.button("🏆 Scores"):
+    # Podium preview en haut
+    scores = [(nom, info['points']) for nom, info in data['colocataires'].items()]
+    scores.sort(key=lambda x: x[1], reverse=True)
+    
+    col_podium, col_buttons = st.columns([2, 1])
+    
+    with col_podium:
+        st.markdown("**🏆 Podium actuel:**")
+        podium_cols = st.columns(3)
+        
+        for i, (nom, points) in enumerate(scores[:3]):
+            with podium_cols[i]:
+                if i == 0:
+                    st.markdown(f"👑 **{nom}**")
+                    st.markdown(f"🥇 {points} pts")
+                elif i == 1:
+                    st.markdown(f"🥈 **{nom}**")
+                    st.markdown(f"{points} pts")
+                elif i == 2:
+                    st.markdown(f"🥉 **{nom}**")
+                    st.markdown(f"{points} pts")
+    
+    with col_buttons:
+        if st.button("🏆 Scores complets"):
             st.session_state.page = "scores"
             st.rerun()
         if st.button("⚙️ Paramètres"):
@@ -266,94 +287,111 @@ def page_dashboard():
                 # Vérifier si la tâche est disponible pour l'utilisateur
                 is_available = is_task_available_for_user(info, user)
                 
-                # Créer un container avec style conditionnel
+                # Encadré gris pour toutes les tâches
                 if is_available:
-                    container = st.container()
+                    # Tâche disponible - encadré normal
+                    st.markdown("""
+                    <div style='
+                        background-color: #f8f9fa; 
+                        border: 1px solid #dee2e6; 
+                        border-radius: 8px; 
+                        padding: 12px; 
+                        margin-bottom: 8px;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    '>
+                    """, unsafe_allow_html=True)
                 else:
-                    # Tâche grisée pour utilisateur non autorisé
-                    container = st.container()
-                    with container:
-                        st.markdown(f"<div style='opacity: 0.4; background-color: #f0f0f0; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
+                    # Tâche non disponible - encadré grisé
+                    st.markdown("""
+                    <div style='
+                        background-color: #f0f0f0; 
+                        border: 1px solid #d0d0d0; 
+                        border-radius: 8px; 
+                        padding: 12px; 
+                        margin-bottom: 8px;
+                        opacity: 0.6;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                    '>
+                    """, unsafe_allow_html=True)
                 
-                with container:
-                    col_task, col_points, col_btn = st.columns([3, 1, 1])
+                col_task, col_points, col_btn = st.columns([3, 1, 1])
+                
+                with col_task:
+                    # Afficher le nom de la tâche
+                    if is_available:
+                        st.write(f"**{tache}**")
+                    else:
+                        st.write(f"~~{tache}~~ 🔒")
                     
-                    with col_task:
-                        # Afficher le nom de la tâche
-                        if is_available:
-                            st.write(f"**{tache}**")
-                        else:
-                            st.write(f"~~{tache}~~ 🔒")
-                        
-                        # Afficher des informations sur la dernière réalisation
-                        if info.get('derniere_realisation') and info.get('derniere_realisation_par'):
-                            try:
-                                derniere_date = datetime.fromisoformat(info['derniere_realisation'])
-                                jours_ecoules = (datetime.now() - derniere_date).days
-                                qui = info['derniere_realisation_par']
-                                if jours_ecoules == 0:
-                                    st.caption(f"👤 {qui} - Aujourd'hui")
-                                elif jours_ecoules == 1:
-                                    st.caption(f"👤 {qui} - Hier")
-                                else:
-                                    st.caption(f"👤 {qui} - Il y a {jours_ecoules} jours")
-                            except:
-                                pass
-                        elif info.get('derniere_realisation'):
-                            # Ancienne structure sans "qui"
-                            try:
-                                derniere_date = datetime.fromisoformat(info['derniere_realisation'])
-                                jours_ecoules = (datetime.now() - derniere_date).days
-                                if jours_ecoules > 0:
-                                    st.caption(f"🕒 Il y a {jours_ecoules} jour(s)")
-                            except:
-                                pass
+                    # Afficher des informations sur la dernière réalisation
+                    if info.get('derniere_realisation') and info.get('derniere_realisation_par'):
+                        try:
+                            derniere_date = datetime.fromisoformat(info['derniere_realisation'])
+                            jours_ecoules = (datetime.now() - derniere_date).days
+                            qui = info['derniere_realisation_par']
+                            if jours_ecoules == 0:
+                                st.caption(f"👤 {qui} - Aujourd'hui")
+                            elif jours_ecoules == 1:
+                                st.caption(f"👤 {qui} - Hier")
+                            else:
+                                st.caption(f"👤 {qui} - Il y a {jours_ecoules} jours")
+                        except:
+                            pass
+                    elif info.get('derniere_realisation'):
+                        # Ancienne structure sans "qui"
+                        try:
+                            derniere_date = datetime.fromisoformat(info['derniere_realisation'])
+                            jours_ecoules = (datetime.now() - derniere_date).days
+                            if jours_ecoules > 0:
+                                st.caption(f"🕒 Il y a {jours_ecoules} jour(s)")
+                        except:
+                            pass
+                
+                with col_points:
+                    points_actuels = info['points_actuels']
+                    points_base = info.get('points_base', info.get('points', 1))
                     
-                    with col_points:
-                        points_actuels = info['points_actuels']
-                        points_base = info.get('points_base', info.get('points', 1))
-                        
-                        if points_actuels > points_base:
-                            # Tâche avec bonus
-                            st.write(f"**{points_actuels} pts** ⚡")
-                            st.caption(f"(base: {points_base})")
-                        else:
-                            st.write(f"**{points_actuels} pts**")
-                    
-                    with col_btn:
-                        if is_available:
-                            if st.button("✓", key=f"task_{tache}"):
-                                if st.session_state.get(f"confirm_{tache}"):
-                                    # Confirmer la tâche
-                                    points_gagnes = complete_task(data, user, tache)
-                                    save_data(data)
-                                    st.success(f"+{points_gagnes} points!")
-                                    del st.session_state[f"confirm_{tache}"]
-                                    st.rerun()
-                                else:
-                                    st.session_state[f"confirm_{tache}"] = True
-                                    st.rerun()
-                        else:
-                            st.write("🚫")
-                    
-                    # Afficher la confirmation si nécessaire
-                    if is_available and st.session_state.get(f"confirm_{tache}"):
-                        st.write("**C'est fait ?**")
-                        col_oui, col_non = st.columns(2)
-                        with col_oui:
-                            if st.button("Oui", key=f"oui_{tache}"):
+                    if points_actuels > points_base:
+                        # Tâche avec bonus
+                        st.write(f"**{points_actuels} pts** ⚡")
+                        st.caption(f"(base: {points_base})")
+                    else:
+                        st.write(f"**{points_actuels} pts**")
+                
+                with col_btn:
+                    if is_available:
+                        if st.button("✓", key=f"task_{tache}"):
+                            if st.session_state.get(f"confirm_{tache}"):
+                                # Confirmer la tâche
                                 points_gagnes = complete_task(data, user, tache)
                                 save_data(data)
                                 st.success(f"+{points_gagnes} points!")
                                 del st.session_state[f"confirm_{tache}"]
                                 st.rerun()
-                        with col_non:
-                            if st.button("Non", key=f"non_{tache}"):
-                                del st.session_state[f"confirm_{tache}"]
+                            else:
+                                st.session_state[f"confirm_{tache}"] = True
                                 st.rerun()
+                    else:
+                        st.write("🚫")
                 
-                if not is_available:
-                    st.markdown("</div>", unsafe_allow_html=True)
+                # Afficher la confirmation si nécessaire
+                if is_available and st.session_state.get(f"confirm_{tache}"):
+                    st.write("**C'est fait ?**")
+                    col_oui, col_non = st.columns(2)
+                    with col_oui:
+                        if st.button("Oui", key=f"oui_{tache}"):
+                            points_gagnes = complete_task(data, user, tache)
+                            save_data(data)
+                            st.success(f"+{points_gagnes} points!")
+                            del st.session_state[f"confirm_{tache}"]
+                            st.rerun()
+                    with col_non:
+                        if st.button("Non", key=f"non_{tache}"):
+                            del st.session_state[f"confirm_{tache}"]
+                            st.rerun()
+                
+                # Fermer l'encadré
+                st.markdown("</div>", unsafe_allow_html=True)
         
         st.markdown("---")
 
