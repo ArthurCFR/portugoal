@@ -113,14 +113,12 @@ def get_lieu_color(lieu):
 
 def migrate_task_data(data):
     """Migre les données des tâches vers la nouvelle structure si nécessaire"""
-    migrations_count = 0
     for tache_nom, tache_info in data['taches'].items():
         # Vérifier si la tâche a la nouvelle structure
         if 'attribuee_a' not in tache_info:
             # Migrer vers la nouvelle structure
             tache_info['attribuee_a'] = ["Antoine", "Arthur", "Raphael", "Martin", "Perrinne"]
             tache_info['derniere_realisation_par'] = None
-            migrations_count += 1
         
         # Migrer points vers points_base si nécessaire
         if 'points_base' not in tache_info and 'points' in tache_info:
@@ -130,10 +128,6 @@ def migrate_task_data(data):
         # S'assurer que points_actuels existe
         if 'points_actuels' not in tache_info:
             tache_info['points_actuels'] = tache_info.get('points_base', 1)
-    
-    # Afficher un message si des migrations ont eu lieu
-    if migrations_count > 0:
-        st.info(f"🔄 Migration automatique de {migrations_count} tâches vers la nouvelle structure")
     
     return data
 
@@ -628,14 +622,6 @@ def page_parametres():
             data = get_default_data()
             save_data(data)
             st.success("Application réinitialisée!")
-            st.rerun()
-        
-        st.markdown("---")
-        
-        if st.button("🔧 Forcer la migration des données"):
-            data = migrate_task_data(data)
-            save_data(data)
-            st.success("Migration forcée terminée!")
             st.rerun()
 
 def main():
