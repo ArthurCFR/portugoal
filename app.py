@@ -249,7 +249,7 @@ def page_dashboard():
             with podium_cols[i]:
                 if i == 0:
                     st.markdown(f"👑 **{nom}**")
-                    st.markdown(f"🥇 {points} pts")
+                    st.markdown(f"{points} pts")
                 elif i == 1:
                     st.markdown(f"🥈 **{nom}**")
                     st.markdown(f"{points} pts")
